@@ -1,21 +1,28 @@
 <?php
 
 require_once("./database/DataAccessObject.php");
+require_once("./model/TipoProducto.php");
+require_once("./model/Sector.php");
 
 class Producto
 {
   public $id;
   public $nombre;
+  public $precio;
   public $tipo;
+  public $sector;
 
 
   public function crearProducto()
   {
     $dataAccessObject = DataAccessObject::getAccessObject();
-    $consulta = $dataAccessObject->getStatement("INSERT INTO productos (nombre, tipo) VALUES (:nombre, :tipo)");
+    $consulta = $dataAccessObject->getStatement("INSERT INTO productos (nombre, precio, id_tipo_producto, id_sector, disponible) VALUES (:nombre, :precio, :tipo, :sector, :disponible)");
 
     $consulta->bindValue(':nombre', $this->nombre, PDO::PARAM_STR);
-    $consulta->bindValue(':tipo', $this->tipo, PDO::PARAM_STR);
+    $consulta->bindValue(':precio', $this->precio, PDO::PARAM_STR);
+    $consulta->bindValue(':tipo', $this->tipo, PDO::PARAM_INT);
+    $consulta->bindValue(':sector', $this->sector, PDO::PARAM_INT);
+    $consulta->bindValue(':disponible', true, PDO::PARAM_BOOL);
 
     $consulta->execute();
 
@@ -27,7 +34,7 @@ class Producto
   {
     $dataAccessObject = DataAccessObject::getAccessObject();
 
-    $consulta = $dataAccessObject->getStatement("SELECT id, nombre, tipo FROM productos");
+    $consulta = $dataAccessObject->getStatement("SELECT id, nombre, precio, id_tipo_producto AS tipo, id_sector AS sector FROM productos");
     $consulta->execute();
 
 
@@ -38,9 +45,9 @@ class Producto
   {
     $dataAccessObject = DataAccessObject::getAccessObject();
 
-    $consulta = $dataAccessObject->getStatement("SELECT id, nombre, tipo FROM productos WHERE nombre = :nombre");
+    $consulta = $dataAccessObject->getStatement("SELECT id, nombre, precio, id_tipo_producto AS tipo, id_sector AS sector FROM productos WHERE id = :id");
 
-    $consulta->bindValue(':nombre', $producto, PDO::PARAM_STR);
+    $consulta->bindValue(':id', $producto, PDO::PARAM_INT);
 
     $consulta->execute();
 
@@ -51,12 +58,13 @@ class Producto
   {
     $dataAccessObject = DataAccessObject::getAccessObject();
 
-    $consulta = $dataAccessObject->getStatement("UPDATE productos SET nombre = :nombre, tipo = :tipo WHERE id = :id");
-
+    $consulta = $dataAccessObject->getStatement("UPDATE productos SET nombre = :nombre, precio = :precio, id_tipo_producto = :tipo, id_sector = :sector WHERE id = :id");
 
     $consulta->bindValue(':id', $this->id, PDO::PARAM_INT);
     $consulta->bindValue(':nombre', $this->nombre, PDO::PARAM_STR);
+    $consulta->bindValue(':precio', $this->precio, PDO::PARAM_STR);
     $consulta->bindValue(':tipo', $this->tipo, PDO::PARAM_INT);
+    $consulta->bindValue(':sector', $this->sector, PDO::PARAM_INT);
 
     $consulta->execute();
   }
@@ -65,12 +73,11 @@ class Producto
   {
     $dataAccessObject = DataAccessObject::getAccessObject();
 
-    $consulta = $dataAccessObject->getStatement("UPDATE productos SET fechaBaja = :fechaBaja WHERE id = :id");
+    $consulta = $dataAccessObject->getStatement("UPDATE productos SET disponible = :disponible WHERE id = :id");
 
-    $fecha = new DateTime(date("d-m-Y"));
 
     $consulta->bindValue(':id', $producto, PDO::PARAM_INT);
-    $consulta->bindValue(':fechaBaja', date_format($fecha, 'Y-m-d H:i:s'));
+    $consulta->bindValue(':disponible', false, PDO::PARAM_BOOL);
 
     $consulta->execute();
   }

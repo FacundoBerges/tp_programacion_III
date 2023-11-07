@@ -2,6 +2,7 @@
 
 require_once("./interface/IApiUsable.php");
 require_once("./model/Usuario.php");
+require_once("./model/TipoUsuario.php");
 
 class UsuarioController implements IApiUsable
 {

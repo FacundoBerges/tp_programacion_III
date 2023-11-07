@@ -12,7 +12,7 @@ class TipoUsuario
   {
     $dataAccessObject = DataAccessObject::getAccessObject();
 
-    $consulta = $dataAccessObject->getStatement("SELECT id_tipo_usuario AS id, nombre_tipo_usuario AS tipo FROM tipos_usuarios");
+    $consulta = $dataAccessObject->getStatement("SELECT id_tipo AS id, nombre_tipo AS tipo FROM tipos_usuarios");
     $consulta->execute();
 
 
@@ -22,7 +22,7 @@ class TipoUsuario
   public static function obtenerTipoPorId($tipoUsuario)
   {
     $dataAccessObject = DataAccessObject::getAccessObject();
-    $consulta = $dataAccessObject->getStatement("SELECT id_tipo_usuario AS id, nombre_tipo_usuario AS tipo FROM tipos_usuarios WHERE id_tipo_usuario = :id");
+    $consulta = $dataAccessObject->getStatement("SELECT id_tipo AS id, nombre_tipo AS tipo FROM tipos_usuarios WHERE id_tipo = :id");
 
     $consulta->bindValue(':id', $tipoUsuario, PDO::PARAM_INT);
 
@@ -34,7 +34,7 @@ class TipoUsuario
   public static function obtenerTipoPorNombre($tipoUsuario)
   {
     $dataAccessObject = DataAccessObject::getAccessObject();
-    $consulta = $dataAccessObject->getStatement("SELECT id_tipo_usuario AS id, nombre_tipo_usuario AS tipo FROM tipos_usuarios WHERE nombre_tipo_usuario = :tipo");
+    $consulta = $dataAccessObject->getStatement("SELECT id_tipo AS id, nombre_tipo AS tipo FROM tipos_usuarios WHERE nombre_tipo = :tipo");
 
     $consulta->bindValue(':tipo', $tipoUsuario, PDO::PARAM_STR);
 
